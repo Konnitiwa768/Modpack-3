@@ -53,7 +53,7 @@ jobs:
             elif [ "$MOD_NAME" == "Undergarden" ]; then
               MOD_VERSION="0.5.5"  # Undergardenのバージョン指定
             elif [ "$MOD_NAME" == "DisguiseMob" ]; then
-              MOD_VERSION="disguiselib-1.0.3-forge"  # DisguiseMobのバージョン指定
+              MOD_VERSION="disguiselib-1.0.3-forge.jar"  # DisguiseMobのバージョン指定
             else
               MOD_VERSION="latest"
             fi
