@@ -1,0 +1,17 @@
+command /alchemy:
+    trigger:
+        open virtual chest inventory with size 3 named "錬金術"
+        format slot 11 with oak wood named "素材" with lore "9個でダイヤを作成"
+        format slot 15 with diamond named "ダイヤモンド" with lore "ダイヤモンドに変換"
+
+on inventory click:
+    if name of event-inventory is "錬金術":
+        if clicked item is 9 flint:
+            if player has 9 flint:
+                remove 9 flint from player
+                give player 1 diamond
+                send "&a錬金術が成功しました！ダイヤモンドを手に入れました。"
+                cancel event
+            else:
+                send "&c原木が足りません！9個集めてください。"
+                cancel event

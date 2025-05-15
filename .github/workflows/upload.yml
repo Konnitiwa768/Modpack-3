@@ -1,0 +1,95 @@
+name: Download and Push Mods to Repo (via CurseForge API)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_mods:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Git User
+        run: |
+          git config --global user.name "Auto Mod Bot"
+          git config --global user.email "bot@example.com"
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Download Mods from CurseForge
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+        run: |
+          mkdir -p mods
+
+          declare -A MODS=(
+            [IceAndFire]=264231
+            [Create]=328085
+            [JEI]=238222
+            [SpartanWeaponry]=278141
+            [FarmersDelight]=398521
+            [SpartanFire]=606315
+            [LycanitesMobs]=224770
+            [FirstAid]=276837
+            [Undergarden]=379849
+          )
+
+          for MOD_NAME in "${!MODS[@]}"; do
+            PROJECT_ID="${MODS[$MOD_NAME]}"
+            echo "Fetching $MOD_NAME..."
+
+            # モッドのバージョン指定
+            if [ "$MOD_NAME" == "LycanitesMobs" ]; then
+              MOD_VERSION="2.3.3.7"  # Lycanites Mobsのバージョン指定
+            elif [ "$MOD_NAME" == "FirstAid" ]; then
+              MOD_VERSION="1.9.8"  # First Aidのバージョン指定
+            elif [ "$MOD_NAME" == "Undergarden" ]; then
+              MOD_VERSION="0.5.5"  # Undergardenのバージョン指定
+            else
+              MOD_VERSION="latest"
+            fi
+
+            # 特定バージョンのファイルIDを取得
+            FILE_ID=$(curl -s -H "x-api-key: $CF_API_KEY" \
+              "https://api.curseforge.com/v1/mods/${PROJECT_ID}/files" |
+              jq ".data[] | select(.fileName | contains(\"${MOD_VERSION}\")) | .id" |
+              head -n 1)
+
+            if [ -z "$FILE_ID" ]; then
+              echo "No ${MOD_VERSION} file found for $MOD_NAME. Skipping..."
+              continue
+            fi
+
+            # ダウンロードURLを取得
+            DOWNLOAD_URL=$(curl -s -H "x-api-key: $CF_API_KEY" \
+              "https://api.curseforge.com/v1/mods/${PROJECT_ID}/files/${FILE_ID}/download-url" |
+              jq -r '.data')
+
+            if [ -z "$DOWNLOAD_URL" ]; then
+              echo "Failed to get download URL for $MOD_NAME (file ID $FILE_ID). Skipping..."
+              continue
+            fi
+
+            echo "Downloading $MOD_NAME from $DOWNLOAD_URL"
+            curl -L -A "Mozilla/5.0" -o "mods/${MOD_NAME}.jar" "$DOWNLOAD_URL"
+          done
+
+      - name: Commit and Push Changes
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          
+          # ステージされていない変更を確認し、コミット
+          git add -A
+          git commit -m "Modファイルを更新（CurseForge API経由）" || echo "変更はありません"
+
+          # 変更がない場合でも、リベースを実行
+          git pull --rebase origin main
+          
+          # 変更をリモートにプッシュ
+          git push origin HEAD:main

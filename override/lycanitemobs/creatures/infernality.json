@@ -1,0 +1,76 @@
+{
+  "name": "infernality",
+  "creatureType": "elemental",
+  "groups": ["inferno", "boss"],
+  "entityClass": "com.lycanitesmobs.core.entity.creature.EntityCinder",
+  "modelClass": "com.lycanitesmobs.client.model.creature.ModelCinder",
+  "loadDefault": true,
+  "enabled": true,
+  "spawning": {
+    "enabled": false
+  },
+  "width": 1.4,
+  "height": 3.0,
+  "experience": 2000,
+  "health": 4000,
+  "defense": 10,
+  "armor": 8,
+  "speed": 28,
+  "damage": 4,
+  "attackSpeed": 1,
+  "rangedSpeed": 5,
+  "effectDuration": 8,
+  "effectAmplifier": 1,
+  "pierce": 2,
+  "sight": 64,
+  "knockbackResistance": 1.0,
+  "bagSize": 10,
+  "eggBackColor": "#cc0000",
+  "eggForeColor": "#ff6600",
+  "element": "fire",
+  "peaceful": false,
+  "summonable": true,
+  "tameable": false,
+  "mountable": false,
+  "summonCost": 16,
+  "dungeonLevel": 5,
+  "drops": [
+    {
+      "item": "minecraft:diamond_block",
+      "minAmount": 4,
+      "maxAmount": 8,
+      "chance": 1.0
+    },
+    {
+      "item": "minecraft:netherite_ingot",
+      "minAmount": 1,
+      "maxAmount": 5,
+      "chance": 0.6
+    },
+    {
+      "item": "minecraft:blaze_rod",
+      "minAmount": 4,
+      "maxAmount": 10,
+      "chance": 0.8
+    },
+    {
+      "item": "minecraft:enchanted_golden_apple",
+      "minAmount": 1,
+      "maxAmount": 1,
+      "chance": 0.35
+    },
+    {
+      "item": "lycanitesmobs:embercharge",
+      "minAmount": 10,
+      "maxAmount": 16,
+      "chance": 1.0
+    }
+  ],
+  "sizeScale": 2.0,
+  "hitboxScale": 1.5,
+  "specialAbilities": [
+    {
+      "type": "boss_tag"
+    }
+  ]
+}

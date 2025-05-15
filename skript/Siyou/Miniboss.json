@@ -1,0 +1,27 @@
+# ミニボス用の能力リスト
+options:
+  ability1: speed 2
+  ability2: strength 1
+  ability3: resistance 1
+  ability4: fire resistance 1
+  ability5: jump boost 2
+  ability6: regeneration 1
+
+# スポーン時：全モブ対象
+on spawn:
+  chance of 1%:
+    set {isMiniBoss.%uuid of spawned entity%} to true
+    set name of spawned entity to "&cミニボス"
+    set max health of spawned entity to health of spawned entity * (random number between 1.5 and 5)
+    set health of spawned entity to max health of spawned entity
+    loop 3 times:
+      set {_id} to random integer between 1 and 6
+      apply potion effect option("ability%{_id}%") to spawned entity for 999999 seconds
+
+# 倒された時：ミニボスかどうか判定してドロップ処理
+on death:
+  if {isMiniBoss.%uuid of victim%} is set:
+    loop 3 times:
+      chance of (5 + random integer between 10 and 50)%: # ドロップ増加Lv10相当のシミュレート
+        drop diamond at location of victim
+    delete {isMiniBoss.%uuid of victim%}

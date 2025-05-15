@@ -1,0 +1,44 @@
+name: Download and Push Mods to Repo (with manual OptiFine)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_mods:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Git User
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+
+      - name: Download Mods (excluding OptiFine)
+        run: |
+          mkdir -p mods
+
+          download_mod() {
+            name="$1"
+            url="$2"
+            echo "Downloading $name..."
+            curl -fL "$url" -o "mods/$name" || echo "Failed to download $name"
+          }
+
+          download_mod "Undergarden.jar" "https://github.com/Konnitiwa768/Swamplands/actions/runs/14720646627/artifacts/3026239971"
+      - name: Add OptiFine Readme Notice
+        run: |
+          echo "OptiFineはライセンスの都合により手動で追加してください。" > mods/README_OptiFine.txt
+
+      - name: Commit and Push Changes
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
+          git add mods
+          git commit -m "Modファイルを更新（OptiFineを除く）" || echo "コミットする変更はありません"
+          git pull --rebase
+          git push origin HEAD:main

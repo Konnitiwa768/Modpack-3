@@ -1,0 +1,10 @@
+{
+  "weaponType": "saber",
+  "material": "amethyst",
+  "displayName": "Amethyst Saber",
+  "registryName": "saber_amethyst",
+  "overrideStats": {
+    "baseDamage": 5.75,
+    "attackSpeed": 2.1
+  }
+}

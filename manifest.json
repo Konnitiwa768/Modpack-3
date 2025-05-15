@@ -1,0 +1,45 @@
+{
+  "minecraft": {
+    "version": "1.18.2",
+    "modLoaders": [
+      {
+        "id": "forge-40.1.0",
+        "primary": true
+      }
+    ]
+  },
+  "manifestType": "minecraftModpack",
+  "manifestVersion": 1,
+  "name": "Custom 1.18.2 Modpack",
+  "version": "1.0.0",
+  "author": "YourNameHere",
+  "files": [
+    {
+      "projectID": 328085,
+      "fileID": 3829521,
+      "required": true
+    },
+    {
+      "projectID": 264231,
+      "fileID": 3824979,
+      "required": true
+    },
+    },
+    {
+      "projectID": 264232,
+      "fileID": 3824679,
+      "required": true
+    },
+    {
+      "projectID": 289380,
+      "fileID": 3970697,
+      "required": true
+    },
+    {
+      "projectID": 238222,
+      "fileID": 3824606,
+      "required": true
+    }
+  ],
+  "overrides": "overrides"
+}

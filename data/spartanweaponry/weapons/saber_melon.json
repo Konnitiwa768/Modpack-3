@@ -1,0 +1,10 @@
+{
+  "weaponType": "saber",
+  "material": "melon",
+  "displayName": "Melon Saber",
+  "registryName": "saber_melon",
+  "overrideStats": {
+    "baseDamage": 5.4,
+    "attackSpeed": 2.2
+  }
+}
