@@ -30,6 +30,7 @@ jobs:
 
           declare -A MODS=(
             [IceAndFire]=264231
+            [Identity]=391390
             [Create]=328085
             [JEI]=238222
             [SpartanWeaponry]=278141
