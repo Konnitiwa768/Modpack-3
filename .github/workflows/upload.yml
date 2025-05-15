@@ -85,7 +85,7 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.SECRET_TOKEN }}@github.com/${{ github.repository }}
           
           # ステージされていない変更を確認し、コミット
           git add -A
