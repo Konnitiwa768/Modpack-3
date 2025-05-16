@@ -1,33 +1,49 @@
 const fishTypes = ['salmon', 'cod', 'tropical_fish', 'pufferfish']
 
-// ログイン時に魚種決定＆見た目変更＆バケツ支給
 ServerEvents.playerLoggedIn(event => {
   const player = event.player
+
   if (!player.persistentData.fishType) {
-    // ランダムに魚種を選択
     const chosenFish = fishTypes[Math.floor(Math.random() * fishTypes.length)]
     player.persistentData.fishType = chosenFish
 
-    // 水バケツ5個配布
     player.give(Item.of('minecraft:water_bucket', 5))
-
     player.tell(`あなたは魚クラフトの世界へようこそ。魚の種類は「${chosenFish}」に決まりました。`)
   }
 
-  // 見た目を魚に変える（Identity Modのdisguiseコマンド使用）
   const fishType = player.persistentData.fishType
-  player.runCommandSilent(`/disguise minecraft:${fishType}`)
+
+  // 魚が既にいるか確認し、なければ召喚
+  const fish = player.world.getEntities().find(e => e.getType() === `minecraft:${fishType}` && e.getTags().contains('fish_host') && e.getPos().distanceTo(player.getPos()) < 10)
+
+  if (!fish) {
+    player.server.runCommandSilent(`summon minecraft:${fishType} ${player.x} ${player.y} ${player.z} {Tags:["fish_host"],NoAI:1b,Invulnerable:1b,Silent:1b}`)
+  }
+
+  // プレイヤーを透明化（長時間）
+  player.runCommandSilent(`effect give @s minecraft:invisibility 1000000 0 true`)
 })
 
-// 酸欠ダメージ処理
 ServerEvents.tick(event => {
   event.server.players.forEach(player => {
     if (!player.persistentData.fishType) return
-    // 水中・雨中以外でダメージ
-    if (!player.isInWater() && !player.isRaining()) {
-      if (player.tickCount % 20 === 0) { // 1秒毎
-        player.attack(0.3, 'suffocation') // First Aid対応ダメージ
-      }
+
+    // 魚を取得
+    const fishType = player.persistentData.fishType
+    const fish = player.world.getEntities().find(e => e.getType() === `minecraft:${fishType}` && e.getTags().contains('fish_host'))
+
+    if (fish) {
+      // 魚をプレイヤーにTP（追従）
+      fish.setPosition(player.x, player.y, player.z)
+    } else {
+      // 魚がいない場合は召喚し直す
+      player.server.runCommandSilent(`summon minecraft:${fishType} ${player.x} ${player.y} ${player.z} {Tags:["fish_host"],NoAI:1b,Invulnerable:1b,Silent:1b}`)
+    }
+
+    // 酸欠ダメージ処理
+    const isWet = player.isInWater() || player.isRaining()
+    if (!isWet && player.tickCount % 20 === 0) {
+      player.attack(0.3, 'suffocation')
     }
   })
 })
