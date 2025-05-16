@@ -30,7 +30,7 @@ jobs:
 
           declare -A MODS=(
             [IceAndFire]=264231
-            [DisguiseLib]=449885
+            [Morph]=229080
             [Create]=328085
             [JEI]=238222
             [SpartanWeaponry]=278141
@@ -52,8 +52,8 @@ jobs:
               MOD_VERSION="1.9.8"  # First Aidのバージョン指定
             elif [ "$MOD_NAME" == "Undergarden" ]; then
               MOD_VERSION="0.5.5"  # Undergardenのバージョン指定
-            elif [ "$FILE_ID" == "DisguiseLib" ]; then
-              MOD_VERSION="disguiselib-1.0.3-forge.jar"  # DisguiseMobのバージョン指定
+            elif [ "$FILE_ID" == "Morph" ]; then
+              FILE_ID="4397367"  # DisguiseMobのバージョン指定
             else
               MOD_VERSION="latest"
             fi
